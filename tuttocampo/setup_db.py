@@ -26,6 +26,19 @@ def setup():
         connection.close()
         return
     
+    # Aggiungi i campionati
+    try:
+        cursor = connection.cursor()
+        campionati = [
+            ('Serie A', 'Campionato di calcio Serie A'),
+            ('Serie B', 'Campionato di calcio Serie B'),
+        ]
+        for nome, descrizione in campionati:
+            cursor.execute('INSERT INTO campionato (nome, descrizione) VALUES (?, ?)', (nome, descrizione))
+        connection.commit()
+        print("✅ Campionati aggiunti con successo!")
+    except Exception as e:
+        print(f"Errore durante l'inserimento dei campionati: {e}")
     finally:
         connection.close()
 

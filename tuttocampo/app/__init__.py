@@ -6,6 +6,8 @@ def create_app():
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'tuttocampo.sqlite'),
+        SESSION_PERMANENT=False,
+        SESSION_TYPE='filesystem',
     )
 
     # Inizializzazione DB

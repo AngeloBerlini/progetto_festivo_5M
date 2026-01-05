@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>✏️ Modifica Risultato Partita</h2>
+    <form method="post">
+        <label><strong>Squadra in Casa:</strong></label><br>
+        <select name="home_team_id" disabled style="padding: 5px;">
+            <option value="{{ match['home_team_id'] }}">{{ match['home_name'] }}</option>
+        </select>
+        <input type="hidden" name="home_team_id" value="{{ match['home_team_id'] }}"><br><br>
+
+        <label><strong>Squadra in Trasferta:</strong></label><br>
+        <select name="away_team_id" disabled style="padding: 5px;">
+            <option value="{{ match['away_team_id'] }}">{{ match['away_name'] }}</option>
+        </select>
+        <input type="hidden" name="away_team_id" value="{{ match['away_team_id'] }}"><br><br>
+
+        <label><strong>Gol Squadra in Casa:</strong></label><br>
+        <input type="number" name="home_score" min="0" value="{{ match['home_score'] }}" required><br><br>
+
+        <label><strong>Gol Squadra in Trasferta:</strong></label><br>
+        <input type="number" name="away_score" min="0" value="{{ match['away_score'] }}" required><br><br>
+
+        <label><strong>Data Partita:</strong></label><br>
+        <input type="datetime-local" name="match_date" value="{{ match['match_date'] }}" required><br><br>
+
+        <button type="submit" style="padding: 10px 20px; background-color: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer;">Salva Modifiche</button>
+        <a href="{{ url_for('main.index') }}" style="padding: 10px 20px; background-color: #666; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">Annulla</a>
+    </form>
+{% endblock %}

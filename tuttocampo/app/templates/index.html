@@ -1,7 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>🏆 Classifica Campionato</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>🏆 Classifica Campionato</h2>
+        {% if campionati %}
+        <div>
+            <form method="GET" style="display: inline;">
+                <select name="campionato_id" onchange="this.form.submit()" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                    {% for camp in campionati %}
+                    <option value="{{ camp['id'] }}" {% if current_campionato and current_campionato['id'] == camp['id'] %}selected{% endif %}>
+                        {{ camp['nome'] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
     <table>
         <tr>
             <th>Pos</th>
@@ -31,9 +47,23 @@
     <a href="{{ url_for('main.add_match') }}" style="display: inline-block; padding: 10px 20px; background-color: #2196F3; color: white; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">➕ Aggiungi Risultato</a>
     {% endif %}
     {% for p in partite %}
-    <div style="border-bottom: 1px solid #eee; padding: 10px; background-color: #f9f9f9;">
-        <strong>{{ p['home_name'] }}</strong> <span style="font-size: 18px; font-weight: bold;">{{ p['home_score'] }} - {{ p['away_score'] }}</span> <strong>{{ p['away_name'] }}</strong>
-        <br><small style="color: #999;">{{ p['match_date'] }}</small>
+    <div style="border-bottom: 1px solid #eee; padding: 10px; background-color: #f9f9f9; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <strong>{{ p['home_name'] }}</strong> <span style="font-size: 18px; font-weight: bold;">{{ p['home_score'] }} - {{ p['away_score'] }}</span> <strong>{{ p['away_name'] }}</strong>
+            <br><small style="color: #999;">{{ p['match_date'] }}</small>
+        </div>
+        {% if g.user %}
+        <div style="white-space: nowrap;">
+            {% if g.user['id'] == p['created_by'] %}
+            <a href="{{ url_for('main.edit_match', match_id=p['id']) }}" style="color: #2196F3; text-decoration: none; margin-right: 10px;">✏️ Modifica</a>
+            <form method="POST" action="{{ url_for('main.delete_match', match_id=p['id']) }}" style="display: inline;" onsubmit="return confirm('Eliminare questa partita?');">
+                <button type="submit" style="background: none; border: none; color: #f44336; cursor: pointer; text-decoration: underline;">🗑️ Elimina</button>
+            </form>
+            {% else %}
+            <small style="color: #999;">Non sei proprietario</small>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
     {% else %}
     <p style="color: #999; font-style: italic;">Nessuna partita ancora. Accedi e aggiungine una!</p>
