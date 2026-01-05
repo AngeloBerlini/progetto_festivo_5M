@@ -29,19 +29,21 @@ python tuttocampo/run.py
 
 L'app sarà disponibile a: **http://127.0.0.1:5000**
 
-## Come Usare
+## 📖 Come Usare
 
 1. **Registrazione/Login**: Crea un account o accedi
-2. **Aggiungere squadre**: Vai al menu "Squadre" e clicca " + Aggiungi Squadra" per creare le tue squadre
-3. **Visualizzare statistiche**: Nella pagina "Squadre" vedi tutte le statistiche (partite, gol, differenza reti)
-4. **Aggiungere risultati**: Dalla Home clicca " + Aggiungi Risultato" per inserire una partita
-5. **Classifica**: Si aggiorna automaticamente in base ai risultati
+2. **Visualizzare squadre**: Vai al menu "Squadre" per vedere tutte le statistiche
+3. **Aggiungere una squadra**: Clicca "➕ Aggiungi Squadra" (solo se loggato)
+4. **Aggiungere un risultato**: Clicca "➕ Aggiungi Risultato" dalla Home
+5. **Classifica**: La classifica si aggiorna automaticamente
 
-##  Iniziare
+## 📊 Squadre Preimpostate (20)
 
-Il database parte vuoto. Devi aggiungere le squadre tu stesso dal menu "Squadre". Le statistiche si creano automaticamente quando aggiungi una squadra e si aggiornano quando inserisci i risultati delle partite.
+AC Milan, Inter, Juventus, Torino, Roma, Lazio, Napoli, Fiorentina, Atalanta, Sampdoria, Genoa, Venezia, Verona, Monza, Como, Lecce, Sassuolo, Empoli, Frosinone, Salernitana
 
-##  Struttura
+Puoi aggiungerne altre dal menu!
+
+## 📁 Struttura
 
 ```
 tuttocampo/
@@ -63,4 +65,4 @@ tuttocampo/
 - Werkzeug (password security)
 
 ---
-**Buon campionato!**
+**Buon campionato! ⚽🏆**
