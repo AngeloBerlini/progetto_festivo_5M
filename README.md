@@ -1,8 +1,8 @@
-# ⚽ Tuttocampo - Gestione Campionato Calcistico
+# Tuttocampo - Gestione Campionato Calcistico
 
 Applicazione web per gestire un campionato calcistico con 20 squadre, risultati delle partite e classifica aggiornata in tempo reale.
 
-## 🎯 Funzionalità
+##  Funzionalità
 
 - Autenticazione (registrazione e login)
 - Gestione squadre con statistiche (partite, gol fatti/subiti, differenza reti)
@@ -10,7 +10,7 @@ Applicazione web per gestire un campionato calcistico con 20 squadre, risultati 
 - Classifica ordinata per punti, differenza reti e gol segnati
 - Visualizzazione storico partite
 
-## 🚀 Installazione
+##  Installazione
 
 ### 1. Installare dipendenze
 ```bash
@@ -29,7 +29,7 @@ python tuttocampo/run.py
 
 L'app sarà disponibile a: **http://127.0.0.1:5000**
 
-## 📖 Come Usare
+##  Come Usare
 
 1. **Registrazione/Login**: Crea un account o accedi
 2. **Visualizzare squadre**: Vai al menu "Squadre" per vedere tutte le statistiche
@@ -37,13 +37,13 @@ L'app sarà disponibile a: **http://127.0.0.1:5000**
 4. **Aggiungere un risultato**: Clicca "➕ Aggiungi Risultato" dalla Home
 5. **Classifica**: La classifica si aggiorna automaticamente
 
-## 📊 Squadre Preimpostate (20)
+## Squadre Preimpostate (20)
 
 AC Milan, Inter, Juventus, Torino, Roma, Lazio, Napoli, Fiorentina, Atalanta, Sampdoria, Genoa, Venezia, Verona, Monza, Como, Lecce, Sassuolo, Empoli, Frosinone, Salernitana
 
 Puoi aggiungerne altre dal menu!
 
-## 📁 Struttura
+## Struttura
 
 ```
 tuttocampo/
@@ -57,7 +57,7 @@ tuttocampo/
 └── setup_db.py
 ```
 
-## 🔧 Stack
+## Stack
 
 - Flask (Python backend)
 - SQLite3 (database)
