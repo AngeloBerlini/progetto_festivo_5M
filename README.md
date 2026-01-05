@@ -1,68 +1,121 @@
-# Tuttocampo - Gestione Campionato Calcistico
+#  Tuttocampo - Gestione Campionato Calcistico
 
-Applicazione web per gestire un campionato calcistico con 20 squadre, risultati delle partite e classifica aggiornata in tempo reale.
+Applicazione web moderna per creare e gestire un campionato calcistico. Aggiungi squadre, inserisci risultati e visualizza una classifica aggiornata in tempo reale con statistiche complete.
 
-##  Funzionalità
+## Caratteristiche
 
-- Autenticazione (registrazione e login)
-- Gestione squadre con statistiche (partite, gol fatti/subiti, differenza reti)
-- Aggiunta risultati con aggiornamento automatico della classifica
-- Classifica ordinata per punti, differenza reti e gol segnati
-- Visualizzazione storico partite
+-  **Autenticazione**: Sistema di registrazione e login sicuro
+-  **Classifica Dinamica**: Ordinamento automatico per punti, differenza reti e gol segnati
+-  **Gestione Risultati**: Inserimento partite con aggiornamento istantaneo delle statistiche
+-  **Statistiche Dettagliate**: Partite giocate, gol fatti/subiti, differenza reti
+-  **Squadre Custom**: Crea le tue squadre e gestisci il campionato come vuoi
 
-##  Installazione
+##  Quick Start
 
-### 1. Installare dipendenze
+### Prerequisiti
+- Python 3.8+
+- pip
+
+### Setup (3 step)
+
+1. **Installa dipendenze**
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Inizializzare il database
+2. **Crea il database**
 ```bash
 python tuttocampo/setup_db.py
 ```
 
-### 3. Avviare l'applicazione
+3. **Avvia l'app**
 ```bash
 python tuttocampo/run.py
 ```
 
-L'app sarà disponibile a: **http://127.0.0.1:5000**
+Visita: **http://127.0.0.1:5000**
 
-## 📖 Come Usare
+## Guida Rapida
 
-1. **Registrazione/Login**: Crea un account o accedi
-2. **Visualizzare squadre**: Vai al menu "Squadre" per vedere tutte le statistiche
-3. **Aggiungere una squadra**: Clicca "➕ Aggiungi Squadra" (solo se loggato)
-4. **Aggiungere un risultato**: Clicca "➕ Aggiungi Risultato" dalla Home
-5. **Classifica**: La classifica si aggiorna automaticamente
+###  Registrati
+- Clicca "Registrati" nel menu
+- Crea username e password
 
-## 📊 Squadre Preimpostate (20)
+###  Aggiungi Squadre
+- Vai al menu "Squadre"
+- Clicca " + Aggiungi Squadra"
+- Inserisci nome e città
 
-AC Milan, Inter, Juventus, Torino, Roma, Lazio, Napoli, Fiorentina, Atalanta, Sampdoria, Genoa, Venezia, Verona, Monza, Como, Lecce, Sassuolo, Empoli, Frosinone, Salernitana
+###  Aggiungi Risultati
+- Dalla Home clicca " Aggiungi Risultato"
+- Seleziona squadra casa/trasferta
+- Inserisci gol e data
+- Salva - la classifica si aggiorna!
 
-Puoi aggiungerne altre dal menu!
+###  Visualizza Statistiche
+- **Home**: Classifica con Pos | Squadra | Partite | Punti | GF | GS | DR
+- **Squadre**: Tabella dettagliata di tutte le squadre
+- **Risultati**: Storico di tutte le partite giocate
 
-## 📁 Struttura
+##  Struttura Progetto
 
 ```
 tuttocampo/
 ├── app/
-│   ├── blueprints/       # auth.py, main.py
-│   ├── repositories/     # user, team, match
-│   ├── templates/        # HTML files
+│   ├── blueprints/
+│   │   ├── auth.py          (login, registrazione)
+│   │   └── main.py          (rotte principali)
+│   ├── repositories/
+│   │   ├── user_repository.py
+│   │   ├── team_repository.py
+│   │   └── match_repository.py
+│   ├── templates/
+│   │   ├── base.html
+│   │   ├── index.html
+│   │   ├── teams.html
+│   │   ├── add_team.html
+│   │   ├── add_match.html
+│   │   └── auth/
 │   ├── db.py
 │   └── schema.sql
 ├── run.py
 └── setup_db.py
 ```
 
-## Stack
+##  Stack
 
-- Flask (Python backend)
-- SQLite3 (database)
-- Jinja2 (template)
-- Werkzeug (password security)
+| Componente | Tecnologia |
+|-----------|-----------|
+| Backend | Flask |
+| Database | SQLite3 |
+| Template | Jinja2 |
+| Security | Werkzeug |
+
+##  Database
+
+**Tabelle:**
+- `user` - Utenti registrati
+- `team` - Squadre
+- `match` - Risultati partite
+- `team_stats` - Statistiche squadre (aggiornate automaticamente)
+
+Le statistiche si aggiornano automaticamente quando:
+-  Aggiungi una squadra → creiamo il record stats
+-  Inserisci una partita → aggiorniamo gol fatti/subiti di entrambe
+
+**Porta 5000 occupata:**
+Modifica `tuttocampo/run.py`:
+```python
+app.run(debug=True, port=5001)
+```
+
+##  Note
+
+- Database parte vuoto - aggiungi squadre manualmente
+- Password hashate con Werkzeug
+- Session-based authentication
+- Debug mode attivo (disabilitare in produzione)
 
 ---
-**Buon campionato! ⚽🏆**
+
+**Crea il tuo campionato!**
