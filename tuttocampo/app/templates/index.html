@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>🏆 Classifica Campionato</h2>
+    <table>
+        <tr>
+            <th>Pos</th>
+            <th>Squadra</th>
+            <th>P</th>
+            <th>Punti</th>
+            <th>GF</th>
+            <th>GS</th>
+            <th>DR</th>
+        </tr>
+        {% for team in classifica %}
+        <tr>
+            <td><strong>{{ loop.index }}</strong></td>
+            <td><strong>{{ team['team_name'] }}</strong></td>
+            <td>{{ team['matches_played'] }}</td>
+            <td><strong>{{ team['points'] }}</strong></td>
+            <td style="color: green; font-weight: bold;">{{ team['goals_for'] }}</td>
+            <td style="color: red; font-weight: bold;">{{ team['goals_against'] }}</td>
+            <td style="font-weight: bold;">{{ team['goal_difference'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <small style="color: #666; margin-top: 10px; display: block;">P = Partite | GF = Gol Fatti | GS = Gol Subiti | DR = Differenza Reti</small>
+
+    <h2 style="margin-top:40px;">⚽ Ultimi Risultati</h2>
+    {% if g.user %}
+    <a href="{{ url_for('main.add_match') }}" style="display: inline-block; padding: 10px 20px; background-color: #2196F3; color: white; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">➕ Aggiungi Risultato</a>
+    {% endif %}
+    {% for p in partite %}
+    <div style="border-bottom: 1px solid #eee; padding: 10px; background-color: #f9f9f9;">
+        <strong>{{ p['home_name'] }}</strong> <span style="font-size: 18px; font-weight: bold;">{{ p['home_score'] }} - {{ p['away_score'] }}</span> <strong>{{ p['away_name'] }}</strong>
+        <br><small style="color: #999;">{{ p['match_date'] }}</small>
+    </div>
+    {% else %}
+    <p style="color: #999; font-style: italic;">Nessuna partita ancora. Accedi e aggiungine una!</p>
+    {% endfor %}
+{% endblock %}

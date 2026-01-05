@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Accedi a Tuttocampo</h2>
+    <form method="post">
+        <div style="margin-bottom: 10px;">
+            <label>Username:</label><br>
+            <input name="username" required>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Password:</label><br>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit" style="background: #00796b; color: white; border: none; padding: 10px 20px; cursor: pointer;">Entra</button>
+    </form>
+    <p>Non hai un account? <a href="{{ url_for('auth.register') }}">Registrati qui</a></p>
+{% endblock %}
