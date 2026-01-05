@@ -15,7 +15,7 @@ def teams():
 
 @bp.route('/squadre/nuova', methods=('GET', 'POST'))
 def add_team():
-    if g.user is None: # Solo chi è loggato può aggiungere
+    if g.user is None:
         return redirect(url_for('auth.login'))
         
     if request.method == 'POST':
@@ -28,7 +28,7 @@ def add_team():
 
 @bp.route('/partite/nuova', methods=('GET', 'POST'))
 def add_match():
-    if g.user is None: # Solo chi è loggato può aggiungere
+    if g.user is None:
         return redirect(url_for('auth.login'))
         
     if request.method == 'POST':

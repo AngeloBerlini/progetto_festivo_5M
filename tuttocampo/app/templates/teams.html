@@ -13,20 +13,17 @@
                 <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Partite</th>
                 <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Gol Fatti</th>
                 <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Gol Subiti</th>
-                <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Differenza Reti</th>
+                <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Differenza</th>
             </tr>
         </thead>
         <tbody>
             {% for team in stats %}
             <tr style="border: 1px solid #ddd;">
-                <td style="border: 1px solid #ddd; padding: 10px;"><strong>{{ team['name'] }}</strong> <br><small style="color: #999;">{{ team['city'] }}</small></td>
+                <td style="border: 1px solid #ddd; padding: 10px;"><strong>{{ team['name'] }}</strong> ({{ team['city'] }})</td>
                 <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">{{ team['matches_played'] }}</td>
                 <td style="border: 1px solid #ddd; padding: 10px; text-align: center; color: green; font-weight: bold;">{{ team['goals_for'] }}</td>
                 <td style="border: 1px solid #ddd; padding: 10px; text-align: center; color: red; font-weight: bold;">{{ team['goals_against'] }}</td>
-                <td style="border: 1px solid #ddd; padding: 10px; text-align: center; font-weight: bold; 
-                    {% if team['goals_for'] - team['goals_against'] > 0 %}color: green;{% elif team['goals_for'] - team['goals_against'] < 0 %}color: red;{% endif %}">
-                    {{ team['goals_for'] - team['goals_against'] }}
-                </td>
+                <td style="border: 1px solid #ddd; padding: 10px; text-align: center; font-weight: bold;">{{ team['goals_for'] - team['goals_against'] }}</td>
             </tr>
             {% else %}
                 <tr><td colspan="5" style="text-align: center; padding: 20px;">Nessuna squadra presente.</td></tr>

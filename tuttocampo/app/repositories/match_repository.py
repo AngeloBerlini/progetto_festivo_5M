@@ -38,19 +38,16 @@ def get_standings():
 def create_match(home_team_id, away_team_id, home_score, away_score, match_date):
     db = get_db()
     
-    # Inserisci la partita
     db.execute(
         'INSERT INTO match (home_team_id, away_team_id, home_score, away_score, match_date) VALUES (?, ?, ?, ?, ?)',
         (home_team_id, away_team_id, home_score, away_score, match_date)
     )
     
-    # Aggiorna le statistiche della squadra di casa
     db.execute(
         'UPDATE team_stats SET matches_played = matches_played + 1, goals_for = goals_for + ?, goals_against = goals_against + ? WHERE team_id = ?',
         (home_score, away_score, home_team_id)
     )
     
-    # Aggiorna le statistiche della squadra in trasferta
     db.execute(
         'UPDATE team_stats SET matches_played = matches_played + 1, goals_for = goals_for + ?, goals_against = goals_against + ? WHERE team_id = ?',
         (away_score, home_score, away_team_id)

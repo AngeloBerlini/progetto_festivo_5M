@@ -5,5 +5,11 @@ def get_all_teams():
 
 def create_team(name, city):
     db = get_db()
-    db.execute('INSERT INTO team (name, city) VALUES (?, ?)', (name, city))
+    cursor = db.cursor()
+    
+    cursor.execute('INSERT INTO team (name, city) VALUES (?, ?)', (name, city))
+    team_id = cursor.lastrowid
+    
+    cursor.execute('INSERT INTO team_stats (team_id, matches_played, goals_for, goals_against) VALUES (?, 0, 0, 0)', (team_id,))
+    
     db.commit()
