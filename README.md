@@ -33,8 +33,8 @@ L'app sarà disponibile a: **http://127.0.0.1:5000**
 
 1. **Registrazione/Login**: Crea un account o accedi
 2. **Visualizzare squadre**: Vai al menu "Squadre" per vedere tutte le statistiche
-3. **Aggiungere una squadra**: Clicca "➕ Aggiungi Squadra" (solo se loggato)
-4. **Aggiungere un risultato**: Clicca "➕ Aggiungi Risultato" dalla Home
+3. **Aggiungere una squadra**: Clicca "Aggiungi Squadra" (solo se loggato)
+4. **Aggiungere un risultato**: Clicca "Aggiungi Risultato" dalla Home
 5. **Classifica**: La classifica si aggiorna automaticamente
 
 ## Squadre Preimpostate (20)
@@ -65,4 +65,4 @@ tuttocampo/
 - Werkzeug (password security)
 
 ---
-**Buon campionato! ⚽🏆**
+**Buon campionato! **
