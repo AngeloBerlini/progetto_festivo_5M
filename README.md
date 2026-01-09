@@ -1,4 +1,4 @@
-#  Tuttocampo - Gestione Campionato Calcistico
+#  Tuttocampo - Gestione Campionati Calcistici
 
 Applicazione web moderna per creare e gestire campionati calcistici. Scegli tra più campionati (Serie A, Serie B), aggiungi squadre, inserisci risultati e visualizza una classifica aggiornata in tempo reale con statistiche complete.
 
