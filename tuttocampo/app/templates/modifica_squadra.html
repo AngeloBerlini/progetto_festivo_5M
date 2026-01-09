@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>✏️ Modifica Squadra</h2>
+    <h2>Modifica Squadra</h2>
     <form method="post">
         <label><strong>Nome Squadra:</strong></label><br>
-        <input type="text" name="name" value="{{ team['name'] }}" required><br><br>
+        <input type="text" name="nome" value="{{ squadra['name'] }}" required><br><br>
         
         <label><strong>Città:</strong></label><br>
-        <input type="text" name="city" value="{{ team['city'] }}" required><br><br>
+        <input type="text" name="città" value="{{ squadra['city'] }}" required><br><br>
         
         <button type="submit" style="padding: 10px 20px; background-color: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer;">Salva Modifiche</button>
-        <a href="{{ url_for('main.teams') }}" style="padding: 10px 20px; background-color: #666; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">Annulla</a>
+        <a href="{{ url_for('main.squadre') }}" style="padding: 10px 20px; background-color: #666; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">Annulla</a>
     </form>
 {% endblock %}

@@ -1,180 +1,190 @@
-from flask import Blueprint, render_template,request,redirect,url_for,g,flash,session
+from flask import Blueprint, render_template, request, redirect, url_for, g, flash, session
 from app.repositories import match_repository, team_repository, campionato_repository
 
 bp = Blueprint('main', __name__)
 
 @bp.route('/')
-def index():
-    # Get campionato from session or request, default to first
-    campionato_id = request.args.get('campionato_id', session.get('campionato_id'))
+def indice():
+    """Pagina principale con classifica e partite del campionato selezionato"""
+    # Recupera l'ID del campionato dalla sessione o dai parametri della richiesta
+    id_campionato = request.args.get('id_campionato', session.get('id_campionato'))
     
-    if not campionato_id:
-        campionati = campionato_repository.get_all_campionati()
+    # Se non c'è un campionato selezionato, usa il primo disponibile
+    if not id_campionato:
+        campionati = campionato_repository.ottieni_tutti_campionati()
         if campionati:
-            campionato_id = campionati[0]['id']
-            session['campionato_id'] = campionato_id
+            id_campionato = campionati[0]['id']
+            session['id_campionato'] = id_campionato
     else:
-        session['campionato_id'] = int(campionato_id)
-        campionato_id = int(campionato_id)
+        session['id_campionato'] = int(id_campionato)
+        id_campionato = int(id_campionato)
     
-    campionati = campionato_repository.get_all_campionati()
-    current_campionato = campionato_repository.get_campionato_by_id(campionato_id) if campionato_id else None
+    campionati = campionato_repository.ottieni_tutti_campionati()
+    campionato_attuale = campionato_repository.ottieni_campionato_per_id(id_campionato) if id_campionato else None
     
     return render_template('index.html', 
-                           classifica=match_repository.get_standings(campionato_id),
-                           partite=match_repository.get_matches_by_campionato(campionato_id),
+                           classifica=match_repository.ottieni_classifica(id_campionato),
+                           partite=match_repository.ottieni_partite_per_campionato(id_campionato),
                            campionati=campionati,
-                           current_campionato=current_campionato)
+                           campionato_attuale=campionato_attuale)
 
 @bp.route('/squadre')
-def teams():
-    campionato_id = session.get('campionato_id')
-    if not campionato_id:
-        campionati = campionato_repository.get_all_campionati()
+def squadre():
+    """Visualizza tutte le squadre del campionato selezionato con le loro statistiche"""
+    id_campionato = session.get('id_campionato')
+    if not id_campionato:
+        campionati = campionato_repository.ottieni_tutti_campionati()
         if campionati:
-            campionato_id = campionati[0]['id']
-            session['campionato_id'] = campionato_id
+            id_campionato = campionati[0]['id']
+            session['id_campionato'] = id_campionato
     
-    # Get team stats for current campionato
-    stats = match_repository.get_team_stats(campionato_id)
+    # Recupera le statistiche delle squadre
+    statistiche = match_repository.ottieni_statistiche_squadre(id_campionato)
     
-    return render_template('teams.html', 
-                           squadre=team_repository.get_teams_by_campionato(campionato_id), 
-                           stats=stats,
-                           campionato_id=campionato_id)
+    return render_template('squadre.html', 
+                           squadre=team_repository.ottieni_squadre_per_campionato(id_campionato), 
+                           statistiche=statistiche,
+                           id_campionato=id_campionato)
 
 @bp.route('/squadre/nuova', methods=('GET', 'POST'))
-def add_team():
-    if g.user is None:
-        return redirect(url_for('auth.login'))
+def aggiungi_squadra():
+    """Crea una nuova squadra (solo per utenti autenticati)"""
+    if g.utente is None:
+        return redirect(url_for('auth.accedi'))
     
-    campionato_id = session.get('campionato_id')
-    if not campionato_id:
-        campionati = campionato_repository.get_all_campionati()
+    id_campionato = session.get('id_campionato')
+    if not id_campionato:
+        campionati = campionato_repository.ottieni_tutti_campionati()
         if campionati:
-            campionato_id = campionati[0]['id']
+            id_campionato = campionati[0]['id']
     
     if request.method == 'POST':
-        name = request.form['name']
-        city = request.form['city']
-        team_repository.create_team(name, city, g.user['id'], campionato_id)
+        nome = request.form['nome']
+        città = request.form['città']
+        team_repository.crea_squadra(nome, città, g.utente['id'], id_campionato)
         flash("Squadra aggiunta con successo!")
-        return redirect(url_for('main.teams'))
+        return redirect(url_for('main.squadre'))
         
-    return render_template('add_team.html')
+    return render_template('aggiungi_squadra.html')
 
-@bp.route('/squadre/<int:team_id>/modifica', methods=('GET', 'POST'))
-def edit_team(team_id):
-    if g.user is None:
-        return redirect(url_for('auth.login'))
+@bp.route('/squadre/<int:id_squadra>/modifica', methods=('GET', 'POST'))
+def modifica_squadra(id_squadra):
+    """Modifica una squadra (solo il creatore può modificarla)"""
+    if g.utente is None:
+        return redirect(url_for('auth.accedi'))
     
-    team = team_repository.get_team_by_id(team_id)
+    squadra = team_repository.ottieni_squadra_per_id(id_squadra)
     
-    if team is None:
+    if squadra is None:
         flash("Squadra non trovata!")
-        return redirect(url_for('main.teams'))
+        return redirect(url_for('main.squadre'))
     
-    if team['created_by'] != g.user['id']:
+    if squadra['created_by'] != g.utente['id']:
         flash("Non puoi modificare una squadra creata da un altro utente!")
-        return redirect(url_for('main.teams'))
+        return redirect(url_for('main.squadre'))
     
     if request.method == 'POST':
-        name = request.form['name']
-        city = request.form['city']
-        team_repository.update_team(team_id, name, city)
+        nome = request.form['nome']
+        città = request.form['città']
+        team_repository.aggiorna_squadra(id_squadra, nome, città)
         flash("Squadra modificata con successo!")
-        return redirect(url_for('main.teams'))
+        return redirect(url_for('main.squadre'))
     
-    return render_template('edit_team.html', team=team)
+    return render_template('modifica_squadra.html', squadra=squadra)
 
-@bp.route('/squadre/<int:team_id>/elimina', methods=('POST',))
-def delete_team(team_id):
-    if g.user is None:
-        return redirect(url_for('auth.login'))
+@bp.route('/squadre/<int:id_squadra>/elimina', methods=('POST',))
+def elimina_squadra(id_squadra):
+    """Elimina una squadra (solo il creatore può eliminarla)"""
+    if g.utente is None:
+        return redirect(url_for('auth.accedi'))
     
-    team = team_repository.get_team_by_id(team_id)
-    if team is None:
+    squadra = team_repository.ottieni_squadra_per_id(id_squadra)
+    if squadra is None:
         flash("Squadra non trovata!")
-        return redirect(url_for('main.teams'))
+        return redirect(url_for('main.squadre'))
     
-    if team['created_by'] != g.user['id']:
+    if squadra['created_by'] != g.utente['id']:
         flash("Non puoi eliminare una squadra creata da un altro utente!")
-        return redirect(url_for('main.teams'))
+        return redirect(url_for('main.squadre'))
     
-    team_repository.delete_team(team_id)
-    flash(f"Squadra '{team['name']}' eliminata con successo!")
+    team_repository.elimina_squadra(id_squadra)
+    flash(f"Squadra '{squadra['name']}' eliminata con successo!")
     
-    return redirect(url_for('main.teams'))
+    return redirect(url_for('main.squadre'))
 
 @bp.route('/partite/nuova', methods=('GET', 'POST'))
-def add_match():
-    if g.user is None:
-        return redirect(url_for('auth.login'))
+def aggiungi_partita():
+    """Crea una nuova partita (solo per utenti autenticati)"""
+    if g.utente is None:
+        return redirect(url_for('auth.accedi'))
     
-    campionato_id = session.get('campionato_id')
-    if not campionato_id:
-        campionati = campionato_repository.get_all_campionati()
+    id_campionato = session.get('id_campionato')
+    if not id_campionato:
+        campionati = campionato_repository.ottieni_tutti_campionati()
         if campionati:
-            campionato_id = campionati[0]['id']
+            id_campionato = campionati[0]['id']
         
     if request.method == 'POST':
-        home_team_id = request.form['home_team_id']
-        away_team_id = request.form['away_team_id']
-        home_score = request.form['home_score']
-        away_score = request.form['away_score']
-        match_date = request.form['match_date']
+        id_squadra_casa = request.form['id_squadra_casa']
+        id_squadra_ospiti = request.form['id_squadra_ospiti']
+        gol_casa = request.form['gol_casa']
+        gol_ospiti = request.form['gol_ospiti']
+        data_partita = request.form['data_partita']
         
-        if home_team_id == away_team_id:
+        # Validazione: le due squadre non possono essere uguali
+        if id_squadra_casa == id_squadra_ospiti:
             flash("Le due squadre non possono essere uguali!")
-            return redirect(url_for('main.add_match'))
+            return redirect(url_for('main.aggiungi_partita'))
         
-        match_repository.create_match(home_team_id, away_team_id, home_score, away_score, match_date, g.user['id'], campionato_id)
+        match_repository.crea_partita(id_squadra_casa, id_squadra_ospiti, gol_casa, gol_ospiti, data_partita, g.utente['id'], id_campionato)
         flash("Partita aggiunta con successo!")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.indice'))
         
-    return render_template('add_match.html', squadre=team_repository.get_teams_by_campionato(campionato_id))
+    return render_template('aggiungi_partita.html', squadre=team_repository.ottieni_squadre_per_campionato(id_campionato))
 
-@bp.route('/partite/<int:match_id>/modifica', methods=('GET', 'POST'))
-def edit_match(match_id):
-    if g.user is None:
-        return redirect(url_for('auth.login'))
+@bp.route('/partite/<int:id_partita>/modifica', methods=('GET', 'POST'))
+def modifica_partita(id_partita):
+    """Modifica una partita (solo il creatore può modificarla)"""
+    if g.utente is None:
+        return redirect(url_for('auth.accedi'))
     
-    match = match_repository.get_match_by_id(match_id)
+    partita = match_repository.ottieni_partita_per_id(id_partita)
     
-    if match is None:
+    if partita is None:
         flash("Partita non trovata!")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.indice'))
     
-    if match['created_by'] != g.user['id']:
+    if partita['created_by'] != g.utente['id']:
         flash("Non puoi modificare una partita creata da un altro utente!")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.indice'))
     
     if request.method == 'POST':
-        home_score = request.form['home_score']
-        away_score = request.form['away_score']
-        match_date = request.form['match_date']
+        gol_casa = request.form['gol_casa']
+        gol_ospiti = request.form['gol_ospiti']
+        data_partita = request.form['data_partita']
         
-        match_repository.update_match(match_id, home_score, away_score, match_date)
+        match_repository.aggiorna_partita(id_partita, gol_casa, gol_ospiti, data_partita)
         flash("Partita modificata con successo!")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.indice'))
     
-    return render_template('edit_match.html', match=match, squadre=team_repository.get_all_teams())
+    return render_template('modifica_partita.html', partita=partita, squadre=team_repository.ottieni_tutte_squadre())
 
-@bp.route('/partite/<int:match_id>/elimina', methods=('POST',))
-def delete_match(match_id):
-    if g.user is None:
-        return redirect(url_for('auth.login'))
+@bp.route('/partite/<int:id_partita>/elimina', methods=('POST',))
+def elimina_partita(id_partita):
+    """Elimina una partita (solo il creatore può eliminarla)"""
+    if g.utente is None:
+        return redirect(url_for('auth.accedi'))
     
-    match = match_repository.get_match_by_id(match_id)
-    if match is None:
+    partita = match_repository.ottieni_partita_per_id(id_partita)
+    if partita is None:
         flash("Partita non trovata!")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.indice'))
     
-    if match['created_by'] != g.user['id']:
+    if partita['created_by'] != g.utente['id']:
         flash("Non puoi eliminare una partita creata da un altro utente!")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.indice'))
     
-    match_repository.delete_match(match_id)
-    flash(f"Partita '{match['home_name']} - {match['away_name']}' eliminata con successo!")
+    match_repository.elimina_partita(id_partita)
+    flash(f"Partita '{partita['home_name']} - {partita['away_name']}' eliminata con successo!")
     
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.indice'))

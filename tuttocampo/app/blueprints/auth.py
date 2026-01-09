@@ -2,34 +2,41 @@ from flask import Blueprint, flash, g, redirect, render_template, request, sessi
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.repositories import user_repository
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__, url_prefix='/auth')# Blueprint per le rotte di autenticazione
 
 @bp.before_app_request
-def load_logged_in_user():
-    user_id = session.get('user_id')
-    g.user = user_repository.get_user_by_id(user_id) if user_id else None
+def carica_utente_loggato():
+    """Carica l'utente dalla sessione a ogni richiesta"""
+    id_utente = session.get('id_utente')
+    g.utente = user_repository.ottieni_utente_per_id(id_utente) if id_utente else None
 
-@bp.route('/register', methods=('GET', 'POST'))
-def register():
+@bp.route('/registrazione', methods=('GET', 'POST'))
+def registrazione():
+    """Gestisce la registrazione di un nuovo utente"""
     if request.method == 'POST':
-        username, password = request.form['username'], request.form['password']
-        if user_repository.create_user(username, generate_password_hash(password)):
-            return redirect(url_for('auth.login'))
-        flash(f"Utente {username} già esistente.")
-    return render_template('auth/register.html')
+        nome_utente, password = request.form['nome_utente'], request.form['password']
+        # Crea l'utente con la password hashata
+        if user_repository.crea_utente(nome_utente, generate_password_hash(password)):
+            return redirect(url_for('auth.accedi'))
+        flash(f"Utente {nome_utente} già esistente.")
+    return render_template('auth/registrazione.html')
 
-@bp.route('/login', methods=('GET', 'POST'))
-def login():
+@bp.route('/accedi', methods=('GET', 'POST'))
+def accedi():
+    """Gestisce l'accesso dell'utente"""
     if request.method == 'POST':
-        user = user_repository.get_user_by_username(request.form['username'])
-        if user and check_password_hash(user['password'], request.form['password']):
+        # Recupera l'utente dal database
+        utente = user_repository.ottieni_utente_per_nome(request.form['nome_utente'])
+        # Verifica le credenziali
+        if utente and check_password_hash(utente['password'], request.form['password']):
             session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('main.index'))
+            session['id_utente'] = utente['id']
+            return redirect(url_for('main.indice'))
         flash("Credenziali errate.")
-    return render_template('auth/login.html')
+    return render_template('auth/accedi.html')
 
-@bp.route('/logout')
-def logout():
+@bp.route('/esci')
+def esci():
+    """Effettua il logout dell'utente"""
     session.clear()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.indice'))

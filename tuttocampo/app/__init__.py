@@ -1,7 +1,11 @@
 import os
 from flask import Flask
 
-def create_app():
+def crea_app():
+    """
+    Crea e configura l'applicazione Flask.
+    Inizializza il database e registra i blueprint per l'autenticazione e le pagine principali.
+    """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -10,13 +14,15 @@ def create_app():
         SESSION_TYPE='filesystem',
     )
 
-    # Inizializzazione DB
+    # Inizializzazione del database
     from . import db
-    db.init_app(app)
+    db.inizializza_app(app)
 
-    # Registrazione Blueprints
+    # Registrazione dei blueprints dalla cartella blueprints
     from .blueprints import main, auth
     app.register_blueprint(main.bp)
     app.register_blueprint(auth.bp)
 
     return app
+
+    

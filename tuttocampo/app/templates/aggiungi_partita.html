@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Aggiungi Risultato Partita</h2>
+    <form method="post">
+        <label for="id_squadra_casa"><strong>Squadra in Casa:</strong></label><br>
+        <select name="id_squadra_casa" id="id_squadra_casa" required>
+            <option value="">-- Seleziona --</option>
+            {% for team in squadre %}
+                <option value="{{ team['id'] }}">{{ team['name'] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="id_squadra_ospiti"><strong>Squadra in Trasferta:</strong></label><br>
+        <select name="id_squadra_ospiti" id="id_squadra_ospiti" required>
+            <option value="">-- Seleziona --</option>
+            {% for team in squadre %}
+                <option value="{{ team['id'] }}">{{ team['name'] }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="gol_casa"><strong>Gol Squadra in Casa:</strong></label><br>
+        <input type="number" name="gol_casa" id="gol_casa" min="0" value="0" required><br><br>
+
+        <label for="gol_ospiti"><strong>Gol Squadra in Trasferta:</strong></label><br>
+        <input type="number" name="gol_ospiti" id="gol_ospiti" min="0" value="0" required><br><br>
+
+        <label for="data_partita"><strong>Data Partita:</strong></label><br>
+        <input type="datetime-local" name="data_partita" id="data_partita" required><br><br>
+
+        <button type="submit" style="padding: 10px 20px; background-color: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer;">Salva Partita</button>
+    </form>
+{% endblock %}

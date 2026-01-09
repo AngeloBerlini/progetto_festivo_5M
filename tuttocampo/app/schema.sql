@@ -1,52 +1,58 @@
-DROP TABLE IF EXISTS user;
+-- Elimina tutte le tabelle se esistono (per reset del database)
+DROP TABLE IF EXISTS utente;
 DROP TABLE IF EXISTS campionato;
-DROP TABLE IF EXISTS team;
-DROP TABLE IF EXISTS match;
-DROP TABLE IF EXISTS team_stats;
+DROP TABLE IF EXISTS squadra;
+DROP TABLE IF EXISTS partita;
+DROP TABLE IF EXISTS statistiche_squadra;
 
-CREATE TABLE user (
+-- Tabella utenti
+CREATE TABLE utente (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL
 );
 
+-- Tabella campionati
 CREATE TABLE campionato (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nome TEXT UNIQUE NOT NULL,
   descrizione TEXT
 );
 
-CREATE TABLE team (
+-- Tabella squadre
+CREATE TABLE squadra (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  city TEXT NOT NULL,
-  created_by INTEGER NOT NULL,
-  campionato_id INTEGER NOT NULL,
-  FOREIGN KEY (created_by) REFERENCES user (id),
-  FOREIGN KEY (campionato_id) REFERENCES campionato (id),
-  UNIQUE(name, campionato_id)
+  nome TEXT NOT NULL,
+  città TEXT NOT NULL,
+  creato_da INTEGER NOT NULL,
+  id_campionato INTEGER NOT NULL,
+  FOREIGN KEY (creato_da) REFERENCES utente (id),
+  FOREIGN KEY (id_campionato) REFERENCES campionato (id),
+  UNIQUE(nome, id_campionato)
 );
 
-CREATE TABLE match (
+-- Tabella partite
+CREATE TABLE partita (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  home_team_id INTEGER NOT NULL,
-  away_team_id INTEGER NOT NULL,
-  home_score INTEGER DEFAULT 0,
-  away_score INTEGER DEFAULT 0,
-  match_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by INTEGER NOT NULL,
-  campionato_id INTEGER NOT NULL,
-  FOREIGN KEY (home_team_id) REFERENCES team (id),
-  FOREIGN KEY (away_team_id) REFERENCES team (id),
-  FOREIGN KEY (created_by) REFERENCES user (id),
-  FOREIGN KEY (campionato_id) REFERENCES campionato (id)
+  id_squadra_casa INTEGER NOT NULL,
+  id_squadra_ospiti INTEGER NOT NULL,
+  gol_casa INTEGER DEFAULT 0,
+  gol_ospiti INTEGER DEFAULT 0,
+  data_partita TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  creato_da INTEGER NOT NULL,
+  id_campionato INTEGER NOT NULL,
+  FOREIGN KEY (id_squadra_casa) REFERENCES squadra (id),
+  FOREIGN KEY (id_squadra_ospiti) REFERENCES squadra (id),
+  FOREIGN KEY (creato_da) REFERENCES utente (id),
+  FOREIGN KEY (id_campionato) REFERENCES campionato (id)
 );
 
-CREATE TABLE team_stats (
+-- Tabella statistiche squadre (aggiornate automaticamente)
+CREATE TABLE statistiche_squadra (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  team_id INTEGER NOT NULL UNIQUE,
-  matches_played INTEGER DEFAULT 0,
-  goals_for INTEGER DEFAULT 0,
-  goals_against INTEGER DEFAULT 0,
-  FOREIGN KEY (team_id) REFERENCES team (id)
+  id_squadra INTEGER NOT NULL UNIQUE,
+  partite_giocate INTEGER DEFAULT 0,
+  gol_fatti INTEGER DEFAULT 0,
+  gol_subiti INTEGER DEFAULT 0,
+  FOREIGN KEY (id_squadra) REFERENCES squadra (id)
 );

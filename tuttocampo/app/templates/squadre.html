@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>🛡️ Squadre Partecipanti</h2>
-    {% if g.user %}
-    <a href="{{ url_for('main.add_team') }}" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">➕ Aggiungi Squadra</a>
+    <h2>Squadre Partecipanti</h2>
+    {% if g.utente %}
+    <a href="{{ url_for('main.aggiungi_squadra') }}" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">Aggiungi Squadra</a>
     {% endif %}
     
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
@@ -14,23 +14,23 @@
                 <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Gol Fatti</th>
                 <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Gol Subiti</th>
                 <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Differenza</th>
-                {% if g.user %}<th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Azioni</th>{% endif %}
+                {% if g.utente %}<th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Azioni</th>{% endif %}
             </tr>
         </thead>
         <tbody>
-            {% for team in stats %}
+            {% for team in statistiche %}
             <tr style="border: 1px solid #ddd;">
                 <td style="border: 1px solid #ddd; padding: 10px;"><strong>{{ team['name'] }}</strong> <br><small style="color: #999;">{{ team['city'] }}</small></td>
                 <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">{{ team['matches_played'] }}</td>
                 <td style="border: 1px solid #ddd; padding: 10px; text-align: center; color: green; font-weight: bold;">{{ team['goals_for'] }}</td>
                 <td style="border: 1px solid #ddd; padding: 10px; text-align: center; color: red; font-weight: bold;">{{ team['goals_against'] }}</td>
                 <td style="border: 1px solid #ddd; padding: 10px; text-align: center; font-weight: bold;">{{ team['goals_for'] - team['goals_against'] }}</td>
-                {% if g.user and team['id'] %}
+                {% if g.utente and team['id'] %}
                 <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">
-                    {% if g.user['id'] == team['created_by'] %}
-                    <a href="{{ url_for('main.edit_team', team_id=team['id']) }}" style="color: #2196F3; text-decoration: none; margin-right: 10px;">✏️ Modifica</a>
-                    <form method="POST" action="{{ url_for('main.delete_team', team_id=team['id']) }}" style="display: inline;" onsubmit="return confirm('Eliminare questa squadra e tutte le sue partite?');">
-                        <button type="submit" style="background: none; border: none; color: #f44336; cursor: pointer; text-decoration: underline;">🗑️ Elimina</button>
+                    {% if g.utente['id'] == team['created_by'] %}
+                    <a href="{{ url_for('main.modifica_squadra', id_squadra=team['id']) }}" style="color: #2196F3; text-decoration: none; margin-right: 10px;">Modifica</a>
+                    <form method="POST" action="{{ url_for('main.elimina_squadra', id_squadra=team['id']) }}" style="display: inline;" onsubmit="return confirm('Eliminare questa squadra e tutte le sue partite?');">
+                        <button type="submit" style="background: none; border: none; color: #f44336; cursor: pointer; text-decoration: underline;">Elimina</button>
                     </form>
                     {% else %}
                     <small style="color: #999;">Non sei proprietario</small>
@@ -39,7 +39,7 @@
                 {% endif %}
             </tr>
             {% else %}
-                <tr><td colspan="{% if g.user %}6{% else %}5{% endif %}" style="text-align: center; padding: 20px;">Nessuna squadra presente.</td></tr>
+                <tr><td colspan="{% if g.utente %}6{% else %}5{% endif %}" style="text-align: center; padding: 20px;">Nessuna squadra presente.</td></tr>
             {% endfor %}
         </tbody>
     </table>

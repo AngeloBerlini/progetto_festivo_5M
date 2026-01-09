@@ -1,47 +1,46 @@
 ```mermaid
 
 erDiagram
-
     CAMPIONATO {
         INTEGER id PK
         TEXT nome
         TEXT descrizione
     }
 
-    TEAM {
+    SQUADRA {
         INTEGER id PK
-        TEXT name
-        TEXT city
-        INTEGER campionato_id FK
+        TEXT nome
+        TEXT città
+        INTEGER id_campionato FK
     }
 
-    MATCH {
+    PARTITA {
         INTEGER id PK
-        INTEGER home_team_id FK
-        INTEGER away_team_id FK
-        INTEGER home_score
-        INTEGER away_score
-        TIMESTAMP match_date
-        INTEGER campionato_id FK
+        INTEGER id_squadra_casa FK
+        INTEGER id_squadra_ospiti FK
+        INTEGER gol_casa
+        INTEGER gol_ospiti
+        TIMESTAMP data_partita
+        INTEGER id_campionato FK
     }
 
-    TEAM_STATS {
+    STATISTICHE_SQUADRA {
         INTEGER id PK
-        INTEGER team_id FK
-        INTEGER matches_played
-        INTEGER goals_for
-        INTEGER goals_against
+        INTEGER id_squadra FK
+        INTEGER partite_giocate
+        INTEGER gol_fatti
+        INTEGER gol_subiti
     }
 
 
 
-    CAMPIONATO ||--o{ TEAM : comprende
-    CAMPIONATO ||--o{ MATCH : include
+    CAMPIONATO ||--o{ SQUADRA : comprende
+    CAMPIONATO ||--o{ PARTITA : include
 
-    TEAM ||--|{ TEAM_STATS : ha
+    SQUADRA ||--|{ STATISTICHE_SQUADRA : ha
 
-    TEAM ||--o{ MATCH : team_casa
-    TEAM ||--o{ MATCH : team_trasferta
+    SQUADRA ||--o{ PARTITA : squadra_casa
+    SQUADRA ||--o{ PARTITA : squadra_ospiti
     
     
 ```

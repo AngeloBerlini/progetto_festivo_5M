@@ -14,14 +14,14 @@
 </head>
 <body>
     <nav>
-        <a href="{{ url_for('main.index') }}">Home Classifica</a>
-        <a href="{{ url_for('main.teams') }}">Squadre</a>
-        {% if g.user %}
-            <span>👤 {{ g.user['username'] }}</span>
-            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        <a href="{{ url_for('main.indice') }}">Home Classifica</a>
+        <a href="{{ url_for('main.squadre') }}">Squadre</a>
+        {% if g.utente %}
+            <span>{{ g.utente['username'] }}</span>
+            <a href="{{ url_for('auth.esci') }}">Esci</a>
         {% else %}
-            <a href="{{ url_for('auth.login') }}">Login</a>
-            <a href="{{ url_for('auth.register') }}">Registrati</a>
+            <a href="{{ url_for('auth.accedi') }}">Accedi</a>
+            <a href="{{ url_for('auth.registrazione') }}">Registrati</a>
         {% endif %}
     </nav>
     <div class="container">
