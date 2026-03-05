@@ -15,3 +15,5 @@ if __name__ == '__main__':
         raise SystemExit(f"Could not find script at {SCRIPT}")
     # Execute the existing script as __main__ (same behaviour as `python tuttocampo/setup_db.py`)
     runpy.run_path(SCRIPT, run_name='__main__')
+
+#gotta catch 'em all catch 'em all chatGPT catch 'em all catch 'em all yeah  
