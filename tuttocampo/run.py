@@ -1,7 +1,10 @@
-from app import crea_app
+from app import create_app
+from dotenv import load_dotenv # Importa la libreria
 
-app = crea_app()
+# Carica le variabili dal file .env
+load_dotenv()
+
+app = create_app()
 
 if __name__ == '__main__':
-    # Avvia l'applicazione Flask in modalità debug
     app.run(debug=True)
